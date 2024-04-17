@@ -4,74 +4,44 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 )
-
-func cleanInput(input string) []string {
-	lower := strings.ToLower(input)
-	words := strings.Fields(lower)
-
-	return words
-}
 
 type clicommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(config *Config) error
 }
 
-func commandHelp(commandMap map[string]clicommand) error {
-	fmt.Println("Welcome to the Pokedex!")
-	fmt.Println("Usage:")
-	for _, value := range commandMap {
-		fmt.Println(value.name, ": ", value.description)
-	}
-	return nil
-}
-
-func commandExit() error {
-	fmt.Println("Command not found. Run 'help' to see available commands.")
-	os.Exit(0)
-	return nil
+type Config struct {
+	Next     string
+	Previous string
 }
 
 func startRepl() {
-	commandMap := map[string]clicommand{
-		"help": {
-			name:        "help",
-			description: "Displays a help message",
-		},
-		"exit": {
-			name:        "exit",
-			description: "Exit the Pokedex",
-		},
-		"map": {
-			name:        "map",
-			description: "display the next 20 locations",
-		},
-		"mapb": {
-			name:        "mapb",
-			description: "display the previous 20 locations",
-		},
-	}
+
 	scanner := bufio.NewScanner(os.Stdin)
+	config := &Config{}
 
-	fmt.Print("Podedex > ")
-	for scanner.Scan() {
-		text := strings.ToLower(scanner.Text())
-		if _, ok := commandMap[text]; !ok {
-			commandExit()
+	for {
+		fmt.Print("Podedex > ")
+		scanner.Scan()
+		text := cleanInput(scanner.Text())
+		if len(text) == 0 {
+			continue
+		}
+		commandName := text[0]
+		availableCommands := getCommands()
+		command, ok := availableCommands[commandName]
+		if !ok {
+			fmt.Println("invalid command")
+			continue
 		}
 
-		if text == "help" {
-			commandHelp(commandMap)
-			fmt.Print("Podedex > ")
-		}
+		fmt.Println("from repl:", config.Next)
 
-		if text == "exit" {
-			os.Exit(0)
+		if err := command.callback(config); err != nil {
+			fmt.Println("Error executing command:", err)
 		}
-
 	}
 
 }
