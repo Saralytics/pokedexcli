@@ -1,6 +1,13 @@
 package main
 
+type Config struct {
+	Next     *string
+	Previous *string
+}
+
 func main() {
-	startRepl()
+
+	cfg := &Config{}
+	startRepl(cfg)
 
 }

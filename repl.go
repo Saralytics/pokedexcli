@@ -12,15 +12,9 @@ type clicommand struct {
 	callback    func(config *Config) error
 }
 
-type Config struct {
-	Next     string
-	Previous string
-}
-
-func startRepl() {
+func startRepl(config *Config) {
 
 	scanner := bufio.NewScanner(os.Stdin)
-	config := &Config{}
 
 	for {
 		fmt.Print("Podedex > ")
@@ -36,8 +30,11 @@ func startRepl() {
 			fmt.Println("invalid command")
 			continue
 		}
-
-		fmt.Println("from repl:", config.Next)
+		// if config.Next == nil {
+		// 	fmt.Println("from repl:", config.Next)
+		// } else {
+		// 	fmt.Println("from repl:", *config.Next)
+		// }
 
 		if err := command.callback(config); err != nil {
 			fmt.Println("Error executing command:", err)
