@@ -1,13 +1,22 @@
 package main
 
-type Config struct {
-	Next     *string
-	Previous *string
+import (
+	"time"
+
+	"github.com/Saralytics/pokedexcli/internal/pokeapi"
+)
+
+type config struct {
+	pokeapiclient pokeapi.Client
+	Next          *string
+	Previous      *string
 }
 
 func main() {
 
-	cfg := &Config{}
-	startRepl(cfg)
+	cfg := config{
+		pokeapiclient: pokeapi.NewClient(time.Hour),
+	}
+	startRepl(&cfg)
 
 }

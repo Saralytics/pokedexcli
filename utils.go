@@ -30,6 +30,7 @@ func getCommands() map[string]clicommand {
 		"mapb": {
 			name:        "mapb",
 			description: "display the previous 20 locations",
+			callback:    callbackMapB,
 		},
 	}
 

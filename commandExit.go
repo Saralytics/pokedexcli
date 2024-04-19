@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-func callbackExit(config *Config) error {
+func callbackExit(config *config) error {
 	os.Exit(0)
 	return nil
 }

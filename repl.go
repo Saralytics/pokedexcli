@@ -9,10 +9,10 @@ import (
 type clicommand struct {
 	name        string
 	description string
-	callback    func(config *Config) error
+	callback    func(config *config) error
 }
 
-func startRepl(config *Config) {
+func startRepl(config *config) {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -30,11 +30,6 @@ func startRepl(config *Config) {
 			fmt.Println("invalid command")
 			continue
 		}
-		// if config.Next == nil {
-		// 	fmt.Println("from repl:", config.Next)
-		// } else {
-		// 	fmt.Println("from repl:", *config.Next)
-		// }
 
 		if err := command.callback(config); err != nil {
 			fmt.Println("Error executing command:", err)
