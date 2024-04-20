@@ -9,7 +9,7 @@ import (
 type clicommand struct {
 	name        string
 	description string
-	callback    func(config *config) error
+	callback    func(config *config, args ...string) error
 }
 
 func startRepl(config *config) {
@@ -24,15 +24,21 @@ func startRepl(config *config) {
 			continue
 		}
 		commandName := text[0]
-		availableCommands := getCommands()
-		command, ok := availableCommands[commandName]
-		if !ok {
-			fmt.Println("invalid command")
-			continue
+		args := []string{}
+		if len(text) > 1 {
+			args = text[1:]
 		}
 
-		if err := command.callback(config); err != nil {
-			fmt.Println("Error executing command:", err)
+		command, exists := getCommands()[commandName]
+		if exists {
+			err := command.callback(config, args...)
+			if err != nil {
+				fmt.Println(err)
+			}
+			continue
+		} else {
+			fmt.Println("Unknown command")
+			continue
 		}
 	}
 

@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func callbackMap(config *config) error {
+func callbackMap(config *config, args ...string) error {
 
 	resp, err := config.pokeapiclient.ListLocationAreas(config.Next)
 	if err != nil {
@@ -21,7 +21,7 @@ func callbackMap(config *config) error {
 	return nil
 }
 
-func callbackMapB(config *config) error {
+func callbackMapB(config *config, args ...string) error {
 
 	if config.Previous == nil {
 		fmt.Println("You are already on the first page")
